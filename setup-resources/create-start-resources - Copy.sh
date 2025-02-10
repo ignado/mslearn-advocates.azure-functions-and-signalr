@@ -10,7 +10,7 @@ set -e
 
 printf "Param 1: $1\n"
 
-LOCATION="uksouth"
+LOCATION="eastus2"
 printf "Location: $LOCATION\n"
 
 # Check if user is logged into Azure CLI
@@ -89,24 +89,14 @@ az cosmosdb sql container create \
     --name stocks \
     --partition-key-path /symbol
 
-printf "Get storage account name \n"
-
-STORAGE_ACCOUNT_NAME_2=$(az storage account list \
-  --resource-group $RESOURCE_GROUP_NAME \
-  --query "[0].name" -o tsv)
- 
-printf "STORAGE_ACCOUNT_NAME_2: $STORAGE_ACCOUNT_NAME_2\n"
- 
 printf "Get storage connection string\n"
-  
-STORAGE_CONNECTION_STRING=$(az storage account show-connection-string --name $STORAGE_ACCOUNT_NAME_2 --resource-group $RESOURCE_GROUP_NAME --query "connectionString" -o tsv)
 
-#STORAGE_CONNECTION_STRING=$(az storage account show-connection-string \
-#  --name $(az storage account list \
-#  --resource-group $RESOURCE_GROUP_NAME \
-#  --query [0].name -o tsv) \
-#  --resource-group $RESOURCE_GROUP_NAME \
-#  --query "connectionString" -o tsv)
+STORAGE_CONNECTION_STRING=$(az storage account show-connection-string \
+--name $(az storage account list \
+  --resource-group $RESOURCE_GROUP_NAME \
+  --query [0].name -o tsv) \
+--resource-group $RESOURCE_GROUP_NAME \
+--query "connectionString" -o tsv)
 
 printf "Get account name \n" 
 
